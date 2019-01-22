@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import UIKit
-import CoreGraphics
 
 class SkyView: UIView {
   private var rageLevel: RageLevel = .happy
@@ -41,27 +40,61 @@ class SkyView: UIView {
     setNeedsDisplay()
   }
 
-  func drawSky(in rect: CGRect, in context: CGContext, with colorSpace: CGColorSpace?) {
-    let baseColor = UIColor(red: 148.0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
-    let middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
-    let farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
+  override func draw(_ rect: CGRect) {
+    guard let context = UIGraphicsGetCurrentContext() else {
+      return
+    }
+
+    let colorSpace = CGColorSpaceCreateDeviceRGB()
+
+    drawSky(in: rect, rageLevel: rageLevel, context: context, colorSpace: colorSpace)
+    drawMountains(in: rect, in: context, with: colorSpace)
+    drawGrass(in: rect, in: context, with: colorSpace)
+    drawFlowers(in: rect, in: context, with: colorSpace)
+  }
+
+  func drawSky(in rect: CGRect, rageLevel: RageLevel, context: CGContext, colorSpace: CGColorSpace) {
+    let baseColor: UIColor
+    let middleStop: UIColor
+    let farStop: UIColor
+
+    switch rageLevel {
+    case .happy:
+      baseColor = UIColor(red: 0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
+      middleStop = UIColor(red: 0.0 / 255.0, green: 255.0 / 255.0, blue: 252.0 / 255.0, alpha: 1.0)
+      farStop = UIColor(red: 255.0 / 255.0, green: 255.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0)
+    case .somewhatHappy:
+      baseColor = UIColor(red: 0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
+      middleStop = UIColor(red: 144.0 / 255.0, green: 152.0 / 255.0, blue: 253.0 / 255.0, alpha: 1.0)
+      farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
+    case .neutral:
+      baseColor = UIColor(red: 148.0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
+      middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
+      farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
+    case .tickedOff:
+      baseColor = UIColor(red: 255.0 / 255.0, green: 147.0 / 255.0, blue: 167.0 / 255.0, alpha: 1.0)
+      middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
+      farStop = UIColor(red: 107.0 / 255.0, green: 107.0 / 255.0, blue: 107.0 / 255.0, alpha: 1.0)
+    case .raging:
+      baseColor = UIColor(red: 255.0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
+      middleStop = UIColor(red: 140.0 / 255.0, green: 33.0 / 255.0, blue: 33.0 / 255.0, alpha: 1.0)
+      farStop = UIColor(red: 0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
+    }
 
     context.saveGState()
 
     let gradientColors = [baseColor.cgColor, middleStop.cgColor, farStop.cgColor]
     let locations: [CGFloat] = [0.0, 0.1, 0.25]
 
-    guard let gradient = CGGradient.init(colorsSpace: colorSpace, colors: gradientColors as CFArray, locations: locations) else {
-      return
+    let startPoint = CGPoint(x: rect.size.height/2, y: 0)
+    let endPoint = CGPoint(x: rect.size.height/2, y: rect.size.width)
+
+    if let gradient = CGGradient.init(colorsSpace: colorSpace, colors: gradientColors as CFArray, locations: locations) {
+      context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
     }
 
-    let startPoint = CGPoint(x: rect.size.height / 2, y: 0)
-    let endPoint = CGPoint(x: rect.size.height / 2, y: rect.size.width)
-
-    context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
     context.restoreGState()
   }
-
 
   func drawMountains(in rect: CGRect, in context: CGContext, with colorSpace: CGColorSpace?) {
     let darkColor = UIColor(red: 1.0 / 255.0, green: 93.0 / 255.0, blue: 67.0 / 255.0, alpha: 1)
@@ -121,9 +154,9 @@ class SkyView: UIView {
     context.setStrokeColor(UIColor.black.cgColor)
     context.strokePath()
 
+    // Cleanup Code
     context.restoreGState()
   }
-
 
   func drawGrass(in rect: CGRect, in context: CGContext, with colorSpace: CGColorSpace?) {
     let grassStart = CGPoint(x: rect.size.height / 2, y: 100)
@@ -157,12 +190,14 @@ class SkyView: UIView {
 
   func drawPetal(in rect: CGRect, inDegrees degrees: Int, inContext context: CGContext) {
     context.saveGState()
+
     let flowerPetal = CGMutablePath()
 
     let midX = rect.midX
     let midY = rect.midY
 
-    let transfrom = CGAffineTransform(translationX: -midX, y: -midY).concatenating(CGAffineTransform(rotationAngle: degreesToRadians(CGFloat(degrees)))).concatenating(CGAffineTransform(translationX: midX, y: midY))
+    let transfrom = CGAffineTransform(translationX: -midX, y: -midY).concatenating(CGAffineTransform(rotationAngle:
+      degreesToRadians(CGFloat(degrees)))).concatenating(CGAffineTransform(translationX: midX, y: midY))
 
     flowerPetal.addEllipse(in: rect, transform: transfrom)
     context.addPath(flowerPetal)
@@ -218,61 +253,4 @@ class SkyView: UIView {
 
     context.restoreGState()
   }
-
-  func drawSky(in rect: CGRect, rageLevel: RageLevel, context: CGContext, colorSpace: CGColorSpace) {
-    let baseColor: UIColor
-    let middleStop: UIColor
-    let farStop: UIColor
-
-    switch rageLevel {
-    case .happy:
-      baseColor = UIColor(red: 0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
-      middleStop = UIColor(red: 0.0 / 255.0, green: 255.0 / 255.0, blue: 252.0 / 255.0, alpha: 1.0)
-      farStop = UIColor(red: 255.0 / 255.0, green: 255.0 / 255.0, blue: 255.0 / 255.0, alpha: 1.0)
-    case .somewhatHappy:
-      baseColor = UIColor(red: 0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
-      middleStop = UIColor(red: 144.0 / 255.0, green: 152.0 / 255.0, blue: 253.0 / 255.0, alpha: 1.0)
-      farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
-    case .neutral:
-      baseColor = UIColor(red: 148.0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
-      middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
-      farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
-    case .tickedOff:
-      baseColor = UIColor(red: 255.0 / 255.0, green: 147.0 / 255.0, blue: 167.0 / 255.0, alpha: 1.0)
-      middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
-      farStop = UIColor(red: 107.0 / 255.0, green: 107.0 / 255.0, blue: 107.0 / 255.0, alpha: 1.0)
-    case .raging:
-      baseColor = UIColor(red: 255.0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
-      middleStop = UIColor(red: 140.0 / 255.0, green: 33.0 / 255.0, blue: 33.0 / 255.0, alpha: 1.0)
-      farStop = UIColor(red: 0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
-    }
-
-    context.saveGState()
-
-    let gradientColors = [baseColor.cgColor, middleStop.cgColor, farStop.cgColor]
-    let locations: [CGFloat] = [0.0, 0.1, 0.25]
-
-    let startPoint = CGPoint(x: rect.size.height/2, y: 0)
-    let endPoint = CGPoint(x: rect.size.height/2, y: rect.size.width)
-
-    if let gradient = CGGradient.init(colorsSpace: colorSpace, colors: gradientColors as CFArray, locations: locations) {
-      context.drawLinearGradient(gradient, start: startPoint, end: endPoint, options: [])
-    }
-
-    context.restoreGState()
-  }
-
-  override func draw(_ rect: CGRect) {
-    guard let context = UIGraphicsGetCurrentContext() else {
-      return
-    }
-
-    let colorSpace = CGColorSpaceCreateDeviceRGB()
-
-    drawSky(in: rect, rageLevel: rageLevel, context: context, colorSpace: colorSpace)
-    drawMountains(in: rect, in: context, with: colorSpace)
-    drawGrass(in: rect, in: context, with: colorSpace)
-    drawFlowers(in: rect, in: context, with: colorSpace)
-  }
-
 }
