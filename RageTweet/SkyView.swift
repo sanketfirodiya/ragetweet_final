@@ -155,21 +155,21 @@ class SkyView: UIView {
     context.restoreGState()
   }
 
-  func drawPedal(in rect: CGRect, inDegrees degrees: Int, inContext context: CGContext) {
+  func drawPetal(in rect: CGRect, inDegrees degrees: Int, inContext context: CGContext) {
     context.saveGState()
-    let flowerPedal = CGMutablePath()
+    let flowerPetal = CGMutablePath()
 
     let midX = rect.midX
     let midY = rect.midY
 
     let transfrom = CGAffineTransform(translationX: -midX, y: -midY).concatenating(CGAffineTransform(rotationAngle: degreesToRadians(CGFloat(degrees)))).concatenating(CGAffineTransform(translationX: midX, y: midY))
 
-    flowerPedal.addEllipse(in: rect, transform: transfrom)
-    context.addPath(flowerPedal)
+    flowerPetal.addEllipse(in: rect, transform: transfrom)
+    context.addPath(flowerPetal)
     context.setStrokeColor(UIColor.black.cgColor)
     context.strokePath()
     context.setFillColor(UIColor.white.cgColor)
-    context.addPath(flowerPedal)
+    context.addPath(flowerPetal)
     context.fillPath()
     context.restoreGState()
   }
@@ -185,11 +185,11 @@ class SkyView: UIView {
       return
     }
 
-    drawPedal(in: CGRect(x: 125, y: 230, width: 9, height: 14), inDegrees: 0, inContext: flowerContext)
-    drawPedal(in: CGRect(x: 115, y: 236, width: 10, height: 12), inDegrees: 300, inContext: flowerContext)
-    drawPedal(in: CGRect(x: 120, y: 246, width: 9, height: 14), inDegrees: 5, inContext: flowerContext)
-    drawPedal(in: CGRect(x: 128, y: 246, width: 9, height: 14), inDegrees: 350, inContext: flowerContext)
-    drawPedal(in: CGRect(x: 133, y: 236, width: 11, height: 14), inDegrees: 80, inContext: flowerContext)
+    drawPetal(in: CGRect(x: 125, y: 230, width: 9, height: 14), inDegrees: 0, inContext: flowerContext)
+    drawPetal(in: CGRect(x: 115, y: 236, width: 10, height: 12), inDegrees: 300, inContext: flowerContext)
+    drawPetal(in: CGRect(x: 120, y: 246, width: 9, height: 14), inDegrees: 5, inContext: flowerContext)
+    drawPetal(in: CGRect(x: 128, y: 246, width: 9, height: 14), inDegrees: 350, inContext: flowerContext)
+    drawPetal(in: CGRect(x: 133, y: 236, width: 11, height: 14), inDegrees: 80, inContext: flowerContext)
 
     let center = CGMutablePath()
     let ellipse = CGRect(x: 126, y: 242, width: 6, height: 6)
