@@ -221,6 +221,7 @@ class SkyView: UIView {
       return
     }
 
+    // Draw petals of the flower
     drawPetal(in: CGRect(x: 125, y: 230, width: 9, height: 14), inDegrees: 0, inContext: flowerContext)
     drawPetal(in: CGRect(x: 115, y: 236, width: 10, height: 12), inDegrees: 300, inContext: flowerContext)
     drawPetal(in: CGRect(x: 120, y: 246, width: 9, height: 14), inDegrees: 5, inContext: flowerContext)
@@ -233,6 +234,7 @@ class SkyView: UIView {
 
     let orangeColor = UIColor(red: 255 / 255.0, green: 174 / 255.0, blue: 49.0 / 255.0, alpha: 1.0)
 
+    // Draw flower
     flowerContext.addPath(center)
     flowerContext.setStrokeColor(UIColor.black.cgColor)
     flowerContext.strokePath()
@@ -244,6 +246,7 @@ class SkyView: UIView {
     flowerContext.addQuadCurve(to: CGPoint(x: 133, y: 270), control: CGPoint(x: 145, y: 250))
     flowerContext.strokePath()
 
+    // Draw clones
     context.draw(flowerLayer, at: CGPoint(x: 0, y: 0))
     context.translateBy(x: 20, y: 10)
     context.draw(flowerLayer, at: CGPoint(x: 0, y: 0))
