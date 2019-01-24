@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,13 +31,13 @@ import UIKit
 class SkyView: UIView {
   private var rageLevel: RageLevel = .happy
 
-  private func degreesToRadians(_ degress: CGFloat) -> CGFloat {
-    return CGFloat.pi * degress/180.0
-  }
-
   func setRageLevel(_ rageLevel: RageLevel) {
     self.rageLevel = rageLevel
     setNeedsDisplay()
+  }
+
+  private func degreesToRadians(_ degress: CGFloat) -> CGFloat {
+    return CGFloat.pi * degress/180.0
   }
 
   override func draw(_ rect: CGRect) {
@@ -71,11 +71,11 @@ class SkyView: UIView {
       baseColor = UIColor(red: 148.0 / 255.0, green: 158.0 / 255.0, blue: 183.0 / 255.0, alpha: 1.0)
       middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
       farStop = UIColor(red: 96.0 / 255.0, green: 111.0 / 255.0, blue: 144.0 / 255.0, alpha: 1.0)
-    case .tickedOff:
+    case .somewhatAngry:
       baseColor = UIColor(red: 255.0 / 255.0, green: 147.0 / 255.0, blue: 167.0 / 255.0, alpha: 1.0)
       middleStop = UIColor(red: 127.0 / 255.0, green: 138.0 / 255.0, blue: 166.0 / 255.0, alpha: 1.0)
       farStop = UIColor(red: 107.0 / 255.0, green: 107.0 / 255.0, blue: 107.0 / 255.0, alpha: 1.0)
-    case .raging:
+    case .angry:
       baseColor = UIColor(red: 255.0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
       middleStop = UIColor(red: 140.0 / 255.0, green: 33.0 / 255.0, blue: 33.0 / 255.0, alpha: 1.0)
       farStop = UIColor(red: 0 / 255.0, green: 0 / 255.0, blue: 0 / 255.0, alpha: 1.0)
@@ -125,6 +125,7 @@ class SkyView: UIView {
 
     // Background Mountain Drawing
     context.addPath(backgroundMountains)
+
     context.clip()
     context.drawLinearGradient(mountainGrad, start: mountainStart, end: mountainEnd, options: [])
     context.setLineWidth(4)
